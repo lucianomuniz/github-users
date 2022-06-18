@@ -1,10 +1,49 @@
+import { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MdSearch } from 'react-icons/md';
 
 import { GithubContext } from '../context/context';
 
 const Search = () => {
-  return <h2>search component</h2>;
+  const [user, setUser] = useState('');
+  const { requests, error, searchGithubUser, isLoading } =
+    useContext(GithubContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!user) return;
+
+    searchGithubUser(user);
+    // optional
+    // setUser('');
+  };
+
+  return (
+    <section className='section'>
+      <Wrapper className='section-center'>
+        {error.show && (
+          <ErrorWrapper>
+            <p>{error.msg}</p>
+          </ErrorWrapper>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className='form-control'>
+            <MdSearch />
+            <input
+              type='text'
+              placeholder='enter github user'
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+            />
+            {requests > 0 && !isLoading && (
+              <button type='submit'>search</button>
+            )}
+          </div>
+        </form>
+        <h3>requests: {requests} / 60</h3>
+      </Wrapper>
+    </section>
+  );
 };
 
 const Wrapper = styled.div`
@@ -76,6 +115,7 @@ const Wrapper = styled.div`
     font-weight: 400;
   }
 `;
+
 const ErrorWrapper = styled.article`
   position: absolute;
   width: 90vw;
@@ -88,4 +128,5 @@ const ErrorWrapper = styled.article`
     letter-spacing: var(--spacing);
   }
 `;
+
 export default Search;
