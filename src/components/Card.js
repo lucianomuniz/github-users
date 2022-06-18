@@ -1,10 +1,51 @@
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { MdBusiness, MdLocationOn, MdLink } from 'react-icons/md';
 
 import { GithubContext } from '../context/context';
 
 const Card = () => {
-  return <h2>card component</h2>;
+  const { githubUser } = useContext(GithubContext);
+  const {
+    avatar_url,
+    html_url,
+    name,
+    company,
+    blog,
+    bio,
+    location,
+    twitter_username,
+  } = githubUser;
+
+  return (
+    <Wrapper>
+      <header>
+        <img src={avatar_url} alt={name} />
+        <div>
+          <h4>{name}</h4>
+          <p>@{twitter_username || 'twitter'}</p>
+        </div>
+        <a href={html_url}>follow</a>
+      </header>
+      <p className='bio'>{bio}</p>
+      <div className='links'>
+        <p>
+          <MdBusiness />
+          {company || 'company'}
+        </p>
+        <p>
+          <MdLocationOn />
+          {location || 'location'}
+        </p>
+        <p>
+          <a href={`https://${blog}`}>
+            <MdLink />
+            {blog || 'blog'}
+          </a>
+        </p>
+      </div>
+    </Wrapper>
+  );
 };
 
 const Wrapper = styled.article`
