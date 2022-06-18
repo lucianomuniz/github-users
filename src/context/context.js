@@ -5,11 +5,6 @@ import mockUser from './mockData.js/mockUser';
 import mockRepos from './mockData.js/mockRepos';
 import mockFollowers from './mockData.js/mockFollowers';
 
-// const url_getUser = 'https://api.github.com/users/wesbos';
-// const url_repos = 'https://api.github.com/users/john-smilga/repos?per_page=100';
-// const url_followers = 'https://api.github.com/users/john-smilga/followers';
-// const url_rate_Limit = 'https://api.github.com/rate_limit';
-
 const rootUrl = 'https://api.github.com';
 
 const GithubContext = React.createContext();
@@ -18,7 +13,7 @@ const GithubProvider = ({ children }) => {
   const [githubUser, setGithubUser] = useState(mockUser);
   const [repos, setRepos] = useState(mockRepos);
   const [followers, setFollowers] = useState(mockFollowers);
-  // request loading
+
   const [requests, setRequests] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({ show: false, msg: '' });
@@ -33,7 +28,15 @@ const GithubProvider = ({ children }) => {
 
     if (response) {
       setGithubUser(response.data);
-      // more logic here
+      const { login, followers_url } = response.data;
+
+      axios(`${rootUrl}/users/${login}/repos?per_page=100`).then((response) => {
+        setRepos(response.data);
+      });
+
+      axios(`${followers_url}?per_page=100`).then((response) => {
+        setFollowers(response.data);
+      });
     } else {
       toggleError(true, 'there is no user with that username');
     }
