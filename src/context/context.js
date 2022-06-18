@@ -9,10 +9,10 @@ const rootUrl = 'https://api.github.com';
 
 const GithubContext = React.createContext();
 
-const GitHubProvider = ({ children }) => {
+const GithubProvider = ({ children }) => {
   return (
     <GithubContext.Provider value={'hello'}>{children}</GithubContext.Provider>
   );
 };
 
-export default { GithubContext, GitHubProvider };
+export { GithubContext, GithubProvider };
